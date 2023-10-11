@@ -1,0 +1,20 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v4.2.1
+_src_path: https://github.com/jupyterlab/extension-template
+author_email: lisamarie9006@gmail.com
+author_name: Lisa Marie Meyers
+data_format: string
+file_extension: ''
+has_binder: true
+has_settings: false
+kind: frontend
+labextension_name: cell_toolbar
+mimetype: ''
+mimetype_name: ''
+project_short_description: A JupyterLab extension that gives each cell a toolbar with
+    functions to hide/show code, run code, etc.
+python_name: cell_toolbar
+repository: https://github.com/LtStarbuck1030/cell_toolbar
+test: true
+viewer_name: ''
+

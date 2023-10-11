@@ -1,0 +1,84 @@
+.jp-Cell .ccb-cellFooterContainer {
+   display: flex;
+   flex-direction: row; /* Ensure horizontal alignment */
+   justify-content: flex-start; /* Move button to the left */
+   align-items: center; /* Vertically center the button */
+  }
+
+  .jp-Cell .ccb-cellFooterBtn {
+    color: #fff;
+    opacity: 0.7;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    border: none;
+    padding: 4px 8px;
+    margin: 0.2rem 0;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+    outline: none;
+    cursor: pointer;
+    user-select: none;  
+    margin-left: 0px;
+    margin-right: 4px;
+  }
+
+  .jp-Placeholder-content .jp-PlaceholderText,
+  .jp-Placeholder-content .jp-MoreHorizIcon {
+    display: none;
+  }
+
+  /* Disable default cell collapsing behavior */
+.jp-InputCollapser,
+.jp-OutputCollapser,
+.jp-Placeholder {
+  cursor: auto !important;
+  pointer-events: none !important;
+}
+
+  /* Add styles for toggle button */
+  .jp-Cell .ccb-toggleBtn{
+    background: #f0f0f0;
+  }
+
+  .jp-Cell .ccb-toggleBtn:hover{
+    background-color: #ccc;
+  }
+
+  .jp-Cell .ccb-toggleBtn:active{
+    background-color: #999;
+  }
+  
+  .jp-Cell .ccb-cellFooterBtn:active {
+    background-color: var(--md-blue-600);
+    text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  .jp-Cell .ccb-cellFooterBtn:hover {
+    background-color: var(--md-blue-500);
+    opacity: 1;
+    text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--jp-elevation-z2);
+  }
+  
+  .jp-Cell .ccb-cellFooterBtn {
+    background: var(--md-blue-400);
+  }
+  
+  .jp-CodeCell {
+    display: flex !important;
+    flex-direction: column;
+  }
+  
+  .jp-CodeCell .jp-CellFooter {
+    height: auto;
+    order: 2;
+  }
+  
+  .jp-Cell .jp-Cell-inputWrapper {
+    margin-top: 5px;
+  }
+  
+  .jp-CodeCell .jp-Cell-outputWrapper {
+    order: 4;
+  }
+  
