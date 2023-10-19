@@ -16,7 +16,7 @@ const CSS_CLASSES = {
   CELL_FOOTER: 'jp-CellFooter',
   CELL_FOOTER_DIV: 'ccb-cellFooterContainer',
   CELL_FOOTER_BUTTON: 'ccb-cellFooterBtn',
-  CELL_TOGGLE_BUTTON: '.ccb-toggleBtn',
+  CELL_TOGGLE_BUTTON: 'ccb-toggleBtn',
   CUSTOM_OUTPUT_AREA: 'custom-output-area', 
 };
 
