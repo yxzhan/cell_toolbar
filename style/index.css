@@ -82,3 +82,7 @@
     order: 4;
   }
   
+  .explanatory-cell {
+    width: 50%;
+    float: left;
+  }
