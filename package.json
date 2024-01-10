@@ -1,6 +1,6 @@
 {
     "name": "cell_toolbar",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "A JupyterLab extension that gives each cell a toolbar with functions to hide/show code, run code, etc.",
     "keywords": [
         "jupyter",
