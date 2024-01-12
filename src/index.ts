@@ -7,9 +7,6 @@ import { ICellFooter, Cell } from '@jupyterlab/cells';
 import { ReadonlyPartialJSONObject } from '@lumino/coreutils';
 import { CommandRegistry } from '@lumino/commands';
 import { IEditorServices } from '@jupyterlab/codeeditor';
-import { OutputArea, OutputAreaModel } from '@jupyterlab/outputarea';
-import { RenderMimeRegistry } from '@jupyterlab/rendermime';
-import { ToolbarButton } from '@jupyterlab/apputils';
 
 import '../style/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -32,74 +29,11 @@ const COMMANDS = {
   CLEAR_SELECTED_OUTPUT: 'clear-output-cell',
 };
 
-// Define a type for Jupyter metadata
-type JupyterMetadata = {
-  source_hidden?: boolean;  
-};
-
-//New function to add a toggle button for explanatory content
-function addExplanatoryContentToggleButton(panel: NotebookPanel): void {
-  let button = new ToolbarButton({
-    className: 'toggle-explanatory-content',
-    iconClass: 'fa fa-book',
-    onClick: () => toggleExplanatoryContent(panel),
-    tooltip: 'Toggle Explanatory Content'
-  });
-
-  panel.toolbar.insertItem(10, 'toggleExplanatoryContent', button);
-}
-
-function toggleExplanatoryContent(panel: NotebookPanel): void {
-  panel.content.widgets.forEach((cell) => {
-    if (cell.model.type === 'markdown') {
-      let metadata = cell.model.metadata;
-      const isExplanatory = metadata['explanatory'] === true;
-      if (isExplanatory) {
-        cell.node.classList.add('explanatory-cell'); // Add custom class
-        let jupyterMetadata = (metadata['jupyter'] as JupyterMetadata) || {};
-        let sourceHidden = jupyterMetadata['source_hidden'] || false;
-
-        // Ensure 'jupyter' metadata exists
-        if (!('jupyter' in metadata)) {
-          metadata['jupyter'] = {};
-        }
-
-        // Initialize sourceHidden to true if it's not defined
-        if (typeof sourceHidden !== 'boolean') {
-          sourceHidden = true;
-          jupyterMetadata['source_hidden'] = sourceHidden;
-        }
-
-        // Log the value of sourceHidden before toggling
-        console.log('Before toggling: sourceHidden =', sourceHidden);
-
-        // Toggle the visibility based on the current 'sourceHidden'
-        if (cell.isHidden == true ){
-          cell.show();
-        } else {
-          cell.hide();
-        };
-
-        // Toggle the 'source_hidden' metadata
-        jupyterMetadata['source_hidden'] = !sourceHidden;
-
-        // Update the cell's metadata with the modified 'jupyter' metadata
-        metadata['jupyter'] = jupyterMetadata;
-
-        // Log the updated value of sourceHidden
-        console.log('After toggling: sourceHidden =', !sourceHidden);
-      }
-    }
-  });
-}
-
-
-
 
 // Function to activate custom commands
 function activateCommands(app: JupyterFrontEnd, tracker: INotebookTracker): Promise<void> {
   // Output a message to the console to indicate activation
-  console.log('JupyterLab extension jupyterlab-aaVisualPolish is activated!');
+  console.log('JupyterLab extension celltool_bar is activated!');
 
   // Wait for the app to be restored before proceeding
   Promise.all([app.restored]).then(([params]) => {
@@ -181,47 +115,6 @@ function activateCommands(app: JupyterFrontEnd, tracker: INotebookTracker): Prom
     });
   });
 
-  //Event listener to collapse code cells when a notebook is loaded
-  tracker.widgetAdded.connect((sender, panel) => {
-    function collapseAllCodeCells(panel: NotebookPanel) {
-      const { content } = panel;
-      const cells = content.widgets;
-      cells.forEach(cell => {
-        if (cell.model.type === 'code') {
-          NotebookActions.hideAllCode(panel.content);
-        }
-      });
-    }  
-    // Function to handle initial setup of Markdown cells
-    function setupMarkdownCells(panel: NotebookPanel) {
-      const { content } = panel;
-      const cells = content.widgets;
-      cells.forEach(cell => {
-        if (cell.model.type === 'markdown') {
-          let metadata = cell.model.metadata;
-          const isExplanatory = metadata['explanatory'] === true;
-          if (isExplanatory) {
-            // Set 'source_hidden' to true in 'jupyter' metadata
-            cell.node.classList.add('explanatory-cell'); // Add custom class
-            let jupyterMetadata = (metadata['jupyter'] as JupyterMetadata) || {};
-            metadata['jupyter'] = { ...jupyterMetadata, source_hidden: true };
-    
-            // Explicitly hide the cell if it is explanatory
-            cell.hide();
-          }
-        }
-      });
-    }
-    
-
-    // Collapse code cells when the current notebook is loaded
-    panel.context.ready.then(() => {
-      collapseAllCodeCells(panel);  
-      setupMarkdownCells(panel);  
-    });
-
-    addExplanatoryContentToggleButton(panel);  
-});
 
 return Promise.resolve();
 }
@@ -259,17 +152,11 @@ export class CellFooterWithButton extends ReactWidget implements ICellFooter {
     super();
     this.addClass(CSS_CLASSES.CELL_FOOTER);
     this.commands = commands;
-    this.codeVisible = false;
+    this.codeVisible = true;
 
-    // Add an event listener to the blue bar element
-    this.node.addEventListener('click', (event) => {
-    // Prevent the default behavior (collapsing/expanding)
-      event.preventDefault();
-    });
   }
 
   render() {
-    console.log('Rendering element');
 
     const toggleIcon = this.codeVisible ? this.HIDE_ICON : this.SHOW_ICON;
         
@@ -278,7 +165,6 @@ export class CellFooterWithButton extends ReactWidget implements ICellFooter {
           className: CSS_CLASSES.CELL_FOOTER_BUTTON,
           title: "Click to run this cell", //tooltip text
           onClick: () => {
-            console.log("Clicked run cell");
             this.commands.execute(COMMANDS.RUN_SELECTED_CODECELL);
           },
         },
@@ -288,7 +174,6 @@ export class CellFooterWithButton extends ReactWidget implements ICellFooter {
           className: `${CSS_CLASSES.CELL_FOOTER_BUTTON} ${CSS_CLASSES.CELL_TOGGLE_BUTTON}`,
           title: "Click to hide or show code", //tooltip text
           onClick: () => {
-            console.log("Clicked toggle cell visibility");
             this.codeVisible = !this.codeVisible;
             if (this.codeVisible) {
               this.commands.execute(COMMANDS.SHOW_CELL_CODE);
@@ -304,28 +189,12 @@ export class CellFooterWithButton extends ReactWidget implements ICellFooter {
           className: CSS_CLASSES.CELL_FOOTER_BUTTON,
           title: "Click to clear cell output", //tooltip text
           onClick: () => {
-            console.log("Clicked clear output");
             this.commands.execute(COMMANDS.CLEAR_SELECTED_OUTPUT);
           },
         },
         React.createElement("i", { className: this.CLEAR_ICON })
         )
     );
-  }
-}
-
-// Define a custom output area
-export class CustomOutputArea extends OutputArea {
-  constructor(commands: CommandRegistry) {
-    // Create a RenderMimeRegistry instance
-    const rendermime = new RenderMimeRegistry();
-
-    super({
-      rendermime, // Use the RenderMimeRegistry instance
-      contentFactory: OutputArea.defaultContentFactory,
-      model: new OutputAreaModel({ trusted: true }),
-    });
-    this.addClass(CSS_CLASSES.CUSTOM_OUTPUT_AREA);
   }
 }
 
@@ -348,12 +217,6 @@ const cellFactory: JupyterFrontEndPlugin<NotebookPanel.IContentFactory> = {
   requires: [IEditorServices],
   autoStart: true,
   activate: (app: JupyterFrontEnd, editorServices: IEditorServices) => {
-    // tslint:disable-next-line:no-console
-    console.log(
-      'JupyterLab extension jupyterlab-aaVisualPolish',
-      'overrides default nootbook content factory'
-    );
-
     const { commands } = app;
     const editorFactory = editorServices.factoryService.newInlineEditor;
     return new ContentFactoryWithFooterButton(commands, { editorFactory });

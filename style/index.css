@@ -1,14 +1,20 @@
+.jp-Cell {
+  padding: 0;
+  margin-bottom: 0.2rem;
+}
+
 .jp-Cell .ccb-cellFooterContainer {
    display: flex;
    flex-direction: row; /* Ensure horizontal alignment */
    justify-content: flex-start; /* Move button to the left */
    align-items: center; /* Vertically center the button */
+   padding: 0.2rem 0 0.2rem 72px;
   }
 
   .jp-Cell .ccb-cellFooterBtn {
     color: #fff;
     opacity: 0.7;
-    font-size: 0.65rem;
+    font-size: 1.2rem;
     font-weight: 500;
     text-transform: uppercase;
     border: none;
